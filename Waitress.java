@@ -8,41 +8,46 @@ import java.util.TimerTask;
  */
 public class Waitress implements Runnable {
 
-    /**
-     * Creates a new waitress. Make sure to save the parameter in the class
-     *
-     * @param waitingArea The waiting area for customers
-     */
+
     private WaitingArea waitingArea;
-    private static Timer timer;
     private Customer currentCustomer;
 
     public Waitress(WaitingArea waitingArea) {
-        // TODO Implement required functionality
         this.waitingArea = waitingArea;
     }
 
-    /**
-     * This is the code that will run when a new thread is
-     * created for this instance
-     */
+
+    //Timer for consuming at intervals
+    private static Timer timer;
+
     @Override
     public void run() {
-        //Initiate timer
-        timer = new Timer();
-        //Wait before fetching a guest
-        int delay = (5 + new Random().nextInt(5)) * 1000;
-        timer.schedule(new FetchGuest(), delay);
-        //Wait before taking the order
-        delay = delay + (5 + new Random().nextInt(5)) * 1000;
-        timer.schedule(new TakeOrder(), delay);
-        //Wait for customer to eat
-        timer.schedule(new WaitToEat(), currentCustomer.getEating_delay());
+        while (true) {
+            synchronized (this) {
+                while (waitingArea.getQueueSize()==0) {
+                    try { wait(); }
+                    catch (InterruptedException e) { e.printStackTrace(); }
+                }
+                //Initiate timer and continue getting customers
+                timer = new Timer();
+                //Wait before fetching a guest
+                int delay = (5 + new Random().nextInt(5)) * 1000;
+                timer.schedule(new FetchGuest(), delay);
+                //Wait before taking the order
+                delay = delay + (5 + new Random().nextInt(5)) * 1000;
+                timer.schedule(new TakeOrder(), delay);
+                //Wait for customer to eat
+                timer.schedule(new WaitToEat(), currentCustomer.getEating_delay());
+            }
+        }
     }
 
+    //TimerTasks:
     class FetchGuest extends TimerTask {
         public void run() {
             currentCustomer = waitingArea.next();
+            //Notify Door that a customer is popped
+            notify();
         }
     }
     class TakeOrder extends TimerTask {
