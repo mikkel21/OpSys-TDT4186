@@ -8,8 +8,10 @@ public class Door implements Runnable {
      * Creates a new Door. Make sure to save the
      * @param waitingArea   The customer queue waiting for a seat
      */
+    private WaitingArea waitingArea;
     public Door(WaitingArea waitingArea) {
         // TODO Implement required functionality
+        this.waitingArea = waitingArea;
     }
 
     /**
@@ -18,7 +20,7 @@ public class Door implements Runnable {
      */
     @Override
     public void run() {
-        // TODO Implement required functionality
+
     }
 
     // Add more methods as you see fit

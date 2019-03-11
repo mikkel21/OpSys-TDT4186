@@ -37,6 +37,8 @@ public class SushiBar {
         takeawayOrders = new SynchronizedInteger(0);
 
         // TODO initialize the bar and start the different threads
+        //initiate the clock
+        //while sushibar isopen
     }
 
     //Writes actions in the log file and console
