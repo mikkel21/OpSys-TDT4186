@@ -11,24 +11,29 @@ public class WaitingArea {
 
     public WaitingArea(int capacity) {
         this.capacity = capacity;
-        customers = new LinkedList<Customer>();
+        customers = new LinkedList<>();
     }
 
     //Add customer to queue
     public synchronized void enter(Customer customer) {
         customers.add(customer);
+        System.out.println(customers);
+        notifyAll();
     }
 
-    public boolean isFull() {
+    public synchronized boolean isFull() {
         return getQueueSize() == getCapacity();
     }
 
-    public boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return getQueueSize()==0;
     }
 
     //Remove customer from queue and return
-    public synchronized Customer next() { return customers.poll(); }
+    public synchronized Customer next() {
+        notifyAll();
+        return customers.poll();
+    }
 
     public int getQueueSize() { return customers.size(); }
 

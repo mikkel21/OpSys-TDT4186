@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Customer {
 
     //Giving customer an id which is unique to the process
-    private AtomicInteger id;
+    private int id;
 
     private int max_orders;
     private int eaten_orders;
@@ -26,12 +26,8 @@ public class Customer {
         return takeAway_orders;
     }
 
-    private int eating_delay;
-
     public Customer() {
-        id = new AtomicInteger();
-
-        eating_delay = (5 + new Random().nextInt(SushiBar.customerWait)) * 1000;
+        id = SushiBar.customerCounter.get();
     }
 
     //TODO: implement orders as described in assignment
@@ -44,9 +40,6 @@ public class Customer {
         takeAway_orders = max_orders - eaten_orders;
     }
 
-    public int getCustomerID() { return id.intValue(); }
+    public int getCustomerID() { return id; }
 
-    public int getEating_delay() {
-        return eating_delay;
-    }
 }

@@ -1,6 +1,7 @@
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class implements the Door component of the sushi bar assignment
@@ -20,28 +21,26 @@ public class Door implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
-            synchronized (this) {
+        while (SushiBar.isOpen) {
+            synchronized (waitingArea) {
                 while (waitingArea.isFull()) { // wait while the area is full
-                    try { wait(); }
+                    try { waitingArea.wait(); }
                     catch (InterruptedException e) { e.printStackTrace(); }
                 }
-                timer = new Timer(); //Wait before pushing a guest
+                try {
+                    TimeUnit.MILLISECONDS.sleep( new Random().nextInt(SushiBar.doorWait) );
+                    Customer customer = new Customer();
+                    waitingArea.enter(customer);
+                    SushiBar.write("Customer #"+customer.getCustomerID()+" is now waiting");
+                    SushiBar.customerCounter.increment(); //increment customerCounter
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                }
 
-                int delay = (5 + new Random().nextInt(SushiBar.doorWait)) * 1000;
-                timer.schedule(new PushCustomer(), delay);
             }
         }
+        SushiBar.write("***** DOOR CLOSED *****");
+
     }
 
-    class PushCustomer extends TimerTask {
-        public void run() {
-            Customer customer = new Customer();
-            waitingArea.enter(customer);
-            SushiBar.write("Customer #"+customer.getCustomerID()+" is now waiting");
-            SushiBar.customerCounter.increment(); //increment customercounter
-            notify(); //Notify waitress that a new customer is pushed
-            timer.cancel();
-        }
-    }
 }

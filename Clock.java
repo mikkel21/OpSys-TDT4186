@@ -18,7 +18,6 @@ public class Clock {
         public void run() {
             SushiBar.isOpen = false; //prevents creating new customers.
             timer.cancel();
-            SushiBar.write("***** DOOR CLOSED *****");
         }
     }
 
@@ -27,9 +26,5 @@ public class Clock {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:SS");
         return sdf.format(cal.getTime());
-    }
-
-    public Timer getTimer() {
-        return timer;
     }
 }

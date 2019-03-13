@@ -40,7 +40,7 @@ public class SushiBar {
 
         // TODO initialize the bar and start the different threads
 
-        WaitingArea waitingArea = new WaitingArea(waitingAreaCapacity); //initiate the waitingarea
+        WaitingArea waitingArea = new WaitingArea(waitingAreaCapacity); //initiate the waitingArea
         Thread producer = new Thread(new Door(waitingArea)); //initiate the producer thread
         List<Thread> consumers = new ArrayList<>();
         for (int i = 0; i < waitressCount; i++) consumers.add(new Thread(new Waitress(waitingArea))); //initiate the consumers thread
@@ -50,7 +50,13 @@ public class SushiBar {
         for (Thread t : consumers) {
             t.start();
         }
+        try {
+            producer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
+        System.out.println("tdttde");
         if (!isOpen) { // stop door when sushibar is closed
             //Is a try/catch really necessary?
             try {
