@@ -24,20 +24,19 @@ public class Waitress implements Runnable {
     public void run() {
         while (true) {
             synchronized (this) {
-                while (waitingArea.getQueueSize()==0) {
+                while (waitingArea.isEmpty()) { // wait while the area is empty
                     try { wait(); }
                     catch (InterruptedException e) { e.printStackTrace(); }
                 }
-                //Initiate timer and continue getting customers
-                timer = new Timer();
-                //Wait before fetching a guest
-                int delay = (5 + new Random().nextInt(5)) * 1000;
+                timer = new Timer(); //Initiate timer and continue getting customers
+
+                int delay = (5 + new Random().nextInt(SushiBar.waitressWait)) * 1000; //Wait before fetching a guest
                 timer.schedule(new FetchGuest(), delay);
-                //Wait before taking the order
+
                 delay = delay + (5 + new Random().nextInt(5)) * 1000;
-                timer.schedule(new TakeOrder(), delay);
-                //Wait for customer to eat
-                timer.schedule(new WaitToEat(), currentCustomer.getEating_delay());
+                timer.schedule(new TakeOrder(), delay); //Wait before taking the order
+
+                timer.schedule(new WaitToEat(), currentCustomer.getEating_delay()); //Wait for customer to eat
             }
         }
     }
@@ -48,16 +47,24 @@ public class Waitress implements Runnable {
             currentCustomer = waitingArea.next();
             //Notify Door that a customer is popped
             notify();
+            SushiBar.write("Customer #"+currentCustomer.getCustomerID()+" is now fetched");
         }
     }
     class TakeOrder extends TimerTask {
         public void run() {
             currentCustomer.order();
+            SushiBar.write("Customer #"+currentCustomer.getCustomerID()+" is now eating");
+            //add to the statistics:
+            SushiBar.servedOrders.add(currentCustomer.getEaten_orders());
+            SushiBar.takeawayOrders.add(currentCustomer.getTakeAway_orders());
+            SushiBar.totalOrders.add(currentCustomer.getMax_orders());
         }
     }
     class WaitToEat extends TimerTask {
         public void run() {
             timer.cancel();
+            SushiBar.write("Customer #"+currentCustomer.getCustomerID()+" is now leaving");
+
         }
     }
 }

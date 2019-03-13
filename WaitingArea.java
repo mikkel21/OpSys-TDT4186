@@ -19,6 +19,14 @@ public class WaitingArea {
         customers.add(customer);
     }
 
+    public boolean isFull() {
+        return getQueueSize() == getCapacity();
+    }
+
+    public boolean isEmpty() {
+        return getQueueSize()==0;
+    }
+
     //Remove customer from queue and return
     public synchronized Customer next() { return customers.poll(); }
 

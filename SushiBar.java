@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SushiBar {
@@ -37,8 +39,40 @@ public class SushiBar {
         takeawayOrders = new SynchronizedInteger(0);
 
         // TODO initialize the bar and start the different threads
-        //initiate the clock
-        //while sushibar isopen
+
+        WaitingArea waitingArea = new WaitingArea(waitingAreaCapacity); //initiate the waitingarea
+        Thread producer = new Thread(new Door(waitingArea)); //initiate the producer thread
+        List<Thread> consumers = new ArrayList<>();
+        for (int i = 0; i < waitressCount; i++) consumers.add(new Thread(new Waitress(waitingArea))); //initiate the consumers thread
+
+        Clock clock = new Clock(duration);
+        producer.start();
+        for (Thread t : consumers) {
+            t.start();
+        }
+
+        if (!isOpen) { // stop door when sushibar is closed
+            //Is a try/catch really necessary?
+            try {
+                producer.join(); //stop producer thread
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+        }
+        if (!isOpen && waitingArea.isEmpty()) { //stop waitresses when sushibar is closed and there are no more customers in queue
+            SushiBar.write("***** NO MORE CUSTOMERS - THE SHOP IS CLOSED NOW *****");
+
+            //Is a try/catch really necessary?
+            try {
+                for (Thread t : consumers) {
+                    t.join(); //stop consumer thread
+                }
+            } catch (InterruptedException e) {
+                System.out.println(e);
+            }
+        }
+
+
     }
 
     //Writes actions in the log file and console

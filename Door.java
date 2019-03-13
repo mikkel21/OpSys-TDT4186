@@ -16,20 +16,19 @@ public class Door implements Runnable {
     }
 
 
-    //Timer for producing at intervals
-    private static Timer timer;
+    private static Timer timer; //Timer for producing at intervals
 
     @Override
     public void run() {
         while (true) {
             synchronized (this) {
-                while (waitingArea.getQueueSize() == waitingArea.getCapacity()) {
+                while (waitingArea.isFull()) { // wait while the area is full
                     try { wait(); }
                     catch (InterruptedException e) { e.printStackTrace(); }
                 }
-                timer = new Timer();
-                //Wait before pushing a guest
-                int delay = (5 + new Random().nextInt(5)) * 1000;
+                timer = new Timer(); //Wait before pushing a guest
+
+                int delay = (5 + new Random().nextInt(SushiBar.doorWait)) * 1000;
                 timer.schedule(new PushCustomer(), delay);
             }
         }
@@ -37,9 +36,11 @@ public class Door implements Runnable {
 
     class PushCustomer extends TimerTask {
         public void run() {
-            waitingArea.enter(new Customer());
-            //Notify waitress that a new customer is pushed
-            notify();
+            Customer customer = new Customer();
+            waitingArea.enter(customer);
+            SushiBar.write("Customer #"+customer.getCustomerID()+" is now waiting");
+            SushiBar.customerCounter.increment(); //increment customercounter
+            notify(); //Notify waitress that a new customer is pushed
             timer.cancel();
         }
     }

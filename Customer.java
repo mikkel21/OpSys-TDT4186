@@ -9,18 +9,39 @@ public class Customer {
 
     //Giving customer an id which is unique to the process
     private AtomicInteger id;
-    private boolean ordered;
+
+    private int max_orders;
+    private int eaten_orders;
+    private int takeAway_orders;
+
+    public int getMax_orders() {
+        return max_orders;
+    }
+
+    public int getEaten_orders() {
+        return eaten_orders;
+    }
+
+    public int getTakeAway_orders() {
+        return takeAway_orders;
+    }
+
     private int eating_delay;
 
     public Customer() {
         id = new AtomicInteger();
-        ordered = false;
-        eating_delay = (5 + new Random().nextInt(5)) * 1000;
+
+        eating_delay = (5 + new Random().nextInt(SushiBar.customerWait)) * 1000;
     }
 
     //TODO: implement orders as described in assignment
     public synchronized void order(){
-        ordered = true;
+        // Number of orders should be random and less than max orders
+        // Number of orders = Eaten orders + TakeAway orders
+        Random rand = new Random();
+        max_orders = rand.nextInt(SushiBar.maxOrder);
+        eaten_orders = rand.nextInt(max_orders);
+        takeAway_orders = max_orders - eaten_orders;
     }
 
     public int getCustomerID() { return id.intValue(); }

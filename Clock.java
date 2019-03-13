@@ -18,6 +18,7 @@ public class Clock {
         public void run() {
             SushiBar.isOpen = false; //prevents creating new customers.
             timer.cancel();
+            SushiBar.write("***** DOOR CLOSED *****");
         }
     }
 
