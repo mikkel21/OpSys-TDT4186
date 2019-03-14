@@ -59,6 +59,7 @@ public class SushiBar {
         });
 
         SushiBar.write("***** NO MORE CUSTOMERS - THE DOOR IS CLOSED NOW *****");
+        SushiBar.write("------ STATISTICS ----- \nTotal number of orders: "+totalOrders.get()+"\nTotal number of takeaway orders: "+takeawayOrders.get()+"\nTotal number of eaten orders: "+servedOrders.get());
     }
 
     //Writes actions in the log file and console

@@ -15,7 +15,7 @@ public class WaitingArea {
     //Add customer to queue
     public synchronized void enter(Customer customer) {
         customers.add(customer);
-        notify();
+        notifyAll();
     }
 
     //Remove customer from queue and return
