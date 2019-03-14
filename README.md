@@ -1,6 +1,6 @@
 ## OpSys-TDT4186
 ### Praktisk Øving 1  
-#####Implementation
+####Implementation
 The SushiBar is implemented in a *Producer-Consumer pattern*  
 The Door is the *producer*  and the Waitresses are the *consumers*
 The WaitingArea is the common *Queue*
@@ -18,20 +18,20 @@ It is in these methods the waiting threads are *notified* of the change.
 In *SushiBar* the threads are initiated and the consumer threads are stopped.  
 The producer thread stops on its own when the *isOpen* variable is turned to false.
 
-#####Wait()
+####Wait()
 The wait() method causes the thread to wait until notified.  
 The wait() method can be seen in Doors and Waitresses' *run()* method.
 
-#####Notify()
+####Notify()
 The notify() method wakes up one random thread waiting for this object to become available.  
 Notify() is found in waitingAreas *enter()* method.
 
-#####NotifyAll()
+####NotifyAll()
 Similar to notify() but wakes up all threads waiting for this object to become available.  
 NotifyAll() is found in waitingAreas *next()* method.
 
-#####Shared variables
+####Shared variables
 WaitingArea is the shared queue. They are managed in the manner explained above.
 
-#####Final statistics
+####Final statistics
 The final statistics is written by the SushiBars *main()* method after all threads have terminated naturally using the *.join()* method on the consumers.
