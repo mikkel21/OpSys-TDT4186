@@ -1,10 +1,5 @@
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * This class implements a customer, which is used for holding data and update the statistics
- *
- */
 public class Customer {
 
     //Giving customer an id which is unique to the process
@@ -32,12 +27,11 @@ public class Customer {
 
     //TODO: implement orders as described in assignment
     public synchronized void order(){
-        // Number of orders should be random and less than max orders
-        // Number of orders = Eaten orders + TakeAway orders
         Random rand = new Random();
-        max_orders = rand.nextInt(SushiBar.maxOrder);
-        eaten_orders = rand.nextInt(max_orders);
+        max_orders = rand.nextInt(SushiBar.maxOrder + 1);
+        eaten_orders = rand.nextInt(max_orders  + 1);
         takeAway_orders = max_orders - eaten_orders;
+        SushiBar.write("Customer #" + this.getCustomerID() + " is now eating");
     }
 
     public int getCustomerID() { return id; }

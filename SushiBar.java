@@ -38,7 +38,6 @@ public class SushiBar {
         servedOrders = new SynchronizedInteger(0);
         takeawayOrders = new SynchronizedInteger(0);
 
-        // TODO initialize the bar and start the different threads
 
         WaitingArea waitingArea = new WaitingArea(waitingAreaCapacity); //initiate the waitingArea
         Thread producer = new Thread(new Door(waitingArea)); //initiate the producer thread
@@ -50,39 +49,20 @@ public class SushiBar {
         for (Thread t : consumers) {
             t.start();
         }
-        try {
-            producer.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        System.out.println("tdttde");
-        if (!isOpen) { // stop door when sushibar is closed
-            //Is a try/catch really necessary?
+        consumers.forEach(thread -> {
             try {
-                producer.join(); //stop producer thread
+                thread.join();
             } catch (InterruptedException e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
-        }
-        if (!isOpen && waitingArea.isEmpty()) { //stop waitresses when sushibar is closed and there are no more customers in queue
-            SushiBar.write("***** NO MORE CUSTOMERS - THE SHOP IS CLOSED NOW *****");
+        });
 
-            //Is a try/catch really necessary?
-            try {
-                for (Thread t : consumers) {
-                    t.join(); //stop consumer thread
-                }
-            } catch (InterruptedException e) {
-                System.out.println(e);
-            }
-        }
-
-
+        SushiBar.write("***** NO MORE CUSTOMERS - THE DOOR IS CLOSED NOW *****");
     }
 
     //Writes actions in the log file and console
-    public static void write(String str) {
+    public synchronized static void write(String str) {
         try {
             FileWriter fw = new FileWriter(log.getAbsoluteFile(), true);
             BufferedWriter bw = new BufferedWriter(fw);
@@ -90,7 +70,6 @@ public class SushiBar {
             bw.close();
             System.out.println(Clock.getTime() + ", " + str);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
