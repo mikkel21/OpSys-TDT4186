@@ -31,7 +31,7 @@ The `notify()` method wakes up one random thread waiting for this object to beco
 
 ##### NotifyAll()
 Similar to `notify()` but wakes up all threads waiting for this object to become available.  
-`notifyAll() is found in waitingAreas `next()` method.
+`notifyAll()` is found in waitingAreas `next()` method.
 
 ##### Shared variables
 WaitingArea is the shared queue. They are managed in the manner explained above.
