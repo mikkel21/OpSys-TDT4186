@@ -1,9 +1,9 @@
 ## OpSys-TDT4186
 ### Praktisk Øving 1  
 #### Implementation
-The SushiBar is implemented in a *Producer-Consumer pattern*  
-The Door is the *producer*  and the Waitresses are the *consumers*
-The WaitingArea is the common *Queue*  
+The SushiBar is implemented in a *Producer-Consumer pattern*.  
+The Door is the *producer*  and the Waitresses are the *consumers*.
+The WaitingArea is the common *Queue*.  
 (See amazing picture below)
 
 ![Pattern](res/pattern.png)
