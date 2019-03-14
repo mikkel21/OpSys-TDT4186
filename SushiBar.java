@@ -39,18 +39,19 @@ public class SushiBar {
         takeawayOrders = new SynchronizedInteger(0);
 
 
+
         WaitingArea waitingArea = new WaitingArea(waitingAreaCapacity); //initiate the waitingArea
         Thread producer = new Thread(new Door(waitingArea)); //initiate the producer thread
-        List<Thread> consumers = new ArrayList<>();
+
+        List<Thread> consumers = new ArrayList<>(); //create a list for the consumer threads(waitresses)
         for (int i = 0; i < waitressCount; i++) consumers.add(new Thread(new Waitress(waitingArea))); //initiate the consumers thread
 
-        Clock clock = new Clock(duration);
-        producer.start();
-        for (Thread t : consumers) {
-            t.start();
-        }
+        Clock clock = new Clock(duration); //initiate a new clock, timer starts and stops after "duration" seconds
+        producer.start(); //start producer thread(door)
 
-        consumers.forEach(thread -> {
+        consumers.forEach(thread -> thread.start()); //start consumer threads(waitresses)
+
+        consumers.forEach(thread -> { //join consumer threads, after this they will stop when the while() is finished in their run method
             try {
                 thread.join();
             } catch (InterruptedException e) {
@@ -59,7 +60,7 @@ public class SushiBar {
         });
 
         SushiBar.write("***** NO MORE CUSTOMERS - THE DOOR IS CLOSED NOW *****");
-        SushiBar.write("------ STATISTICS ----- \nTotal number of orders: "+totalOrders.get()+"\nTotal number of takeaway orders: "+takeawayOrders.get()+"\nTotal number of eaten orders: "+servedOrders.get());
+        SushiBar.write("------ STATISTICS ----- \nTotal number of customers: "+customerCounter.get()+"\nTotal number of orders: "+totalOrders.get()+"\nTotal number of takeaway orders: "+takeawayOrders.get()+"\nTotal number of eaten orders: "+servedOrders.get());
     }
 
     //Writes actions in the log file and console

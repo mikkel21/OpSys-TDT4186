@@ -3,7 +3,10 @@
 #### Implementation
 The SushiBar is implemented in a *Producer-Consumer pattern*  
 The Door is the *producer*  and the Waitresses are the *consumers*
-The WaitingArea is the common *Queue*
+The WaitingArea is the common *Queue*  
+(See amazing picture below)
+
+![Pattern](res/pattern.png)
 
 The doors run method pushes new customers into the waitingArea queue if the queue is not full.  
 To achieve this parts of this method is *synchronized* on waitingArea.  
@@ -24,11 +27,11 @@ The`wait()` method can be seen in Doors and Waitresses' `run()` method.
 
 ##### Notify()
 The `notify()` method wakes up one random thread waiting for this object to become available.  
-Notify() is found in waitingAreas *enter()* method.
+`notify()` is found in waitingAreas *enter()* method.
 
 ##### NotifyAll()
 Similar to `notify()` but wakes up all threads waiting for this object to become available.  
-NotifyAll() is found in waitingAreas `next()` method.
+`notifyAll() is found in waitingAreas `next()` method.
 
 ##### Shared variables
 WaitingArea is the shared queue. They are managed in the manner explained above.

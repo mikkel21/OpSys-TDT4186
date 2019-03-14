@@ -7,8 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class Waitress implements Runnable {
 
 
-    private WaitingArea waitingArea;
-    private Customer currentCustomer;
+    private final WaitingArea waitingArea;
 
     public Waitress(WaitingArea waitingArea) {
         this.waitingArea = waitingArea;
@@ -18,7 +17,8 @@ public class Waitress implements Runnable {
     @Override
     public void run() {
         while (SushiBar.isOpen || (!waitingArea.isEmpty())) { //Run as long as sushibar is open or there are customers waiting
-            synchronized (waitingArea) {
+            Customer currentCustomer; //Customer being waited
+            synchronized (waitingArea) { //Synchronize and monitor waitingArea
                 while (waitingArea.isEmpty()) { // wait while the area is empty
                     try {
                         waitingArea.wait();
@@ -26,14 +26,14 @@ public class Waitress implements Runnable {
                         e.printStackTrace();
                     }
                 }
-                currentCustomer = waitingArea.next();
+                currentCustomer = waitingArea.next(); //get next customer
             }
             try {
-                Thread.sleep(new Random().nextInt(SushiBar.waitressWait));
+                Thread.sleep(new Random().nextInt(SushiBar.waitressWait)); //sleep for maximum waitressWait seconds
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            currentCustomer.order();
+            currentCustomer.order(); //calculate the order
 
             //add to the statistics:
             SushiBar.servedOrders.add(currentCustomer.getEaten_orders());
@@ -41,7 +41,7 @@ public class Waitress implements Runnable {
             SushiBar.totalOrders.add(currentCustomer.getMax_orders());
 
             try {
-                Thread.sleep(new Random().nextInt(SushiBar.customerWait));
+                Thread.sleep(new Random().nextInt(SushiBar.customerWait)); //sleep while customer is eating/ordering
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

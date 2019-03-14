@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 public class Door implements Runnable {
 
 
-    private WaitingArea waitingArea;
+    private final WaitingArea waitingArea;
 
     public Door(WaitingArea waitingArea) {
         this.waitingArea = waitingArea;
@@ -16,7 +16,7 @@ public class Door implements Runnable {
 
     @Override
     public void run() {
-        while (SushiBar.isOpen) {
+        while (SushiBar.isOpen) { //run as long as SushiBar is open
             synchronized (waitingArea) {
                 while (waitingArea.isFull()) { // wait while the area is full
                     try {
@@ -26,9 +26,9 @@ public class Door implements Runnable {
                     }
                 }
                 try {
-                    Thread.sleep(new Random().nextInt(SushiBar.doorWait));
+                    Thread.sleep(new Random().nextInt(SushiBar.doorWait)); //sleep for a maximum of doorWait seconds
                     Customer customer = new Customer();
-                    waitingArea.enter(customer);
+                    waitingArea.enter(customer); //put customer in the waitingArea queue
                     SushiBar.write("Customer #" + customer.getCustomerID() + " is now waiting");
                     SushiBar.customerCounter.increment(); //increment customerCounter
                 } catch (InterruptedException e) {
