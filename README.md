@@ -1,9 +1,9 @@
 ## OpSys-TDT4186
 ### Praktisk Øving 1  
 #### Implementation
-The SushiBar is implemented in a *Producer-Consumer pattern*  
-The Door is the *producer*  and the Waitresses are the *consumers*
-The WaitingArea is the common *Queue*  
+The SushiBar is implemented in a *Producer-Consumer pattern*.  
+The Door is the *producer*  and the Waitresses are the *consumers*.
+The WaitingArea is the common *Queue*.  
 (See amazing picture below)
 
 ![Pattern](res/pattern.png)
@@ -31,7 +31,7 @@ The `notify()` method wakes up one random thread waiting for this object to beco
 
 ##### NotifyAll()
 Similar to `notify()` but wakes up all threads waiting for this object to become available.  
-`notifyAll() is found in waitingAreas `next()` method.
+`notifyAll()` is found in waitingAreas `next()` method.
 
 ##### Shared variables
 WaitingArea is the shared queue. They are managed in the manner explained above.
