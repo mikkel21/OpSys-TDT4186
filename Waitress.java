@@ -18,16 +18,9 @@ public class Waitress implements Runnable {
     public void run() {
         while (SushiBar.isOpen || (!waitingArea.isEmpty())) { //Run as long as sushibar is open or there are customers waiting
             Customer currentCustomer; //Customer being waited
-            synchronized (waitingArea) { //Synchronize and monitor waitingArea
-                while (waitingArea.isEmpty()) { // wait while the area is empty
-                    try {
-                        waitingArea.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                currentCustomer = waitingArea.next(); //get next customer
-            }
+
+            currentCustomer = waitingArea.next(); //get next customer
+
             try {
                 Thread.sleep(new Random().nextInt(SushiBar.waitressWait)); //sleep for maximum waitressWait seconds
             } catch (InterruptedException e) {

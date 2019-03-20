@@ -14,23 +14,37 @@ public class WaitingArea {
 
     //Add customer to queue
     public synchronized void enter(Customer customer) {
+        while (isFull()) { //wait while the area is full
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         customers.add(customer);
         notifyAll();
     }
 
     //Remove customer from queue and return
     public synchronized Customer next() {
+        while (isEmpty()) { // wait while the area is empty
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         Customer c = customers.poll();
         SushiBar.write("Customer #" + c.getCustomerID() + " is now fetched");
         notify();
         return c;
     }
 
-    public synchronized boolean isFull() {
+    public boolean isFull() {
         return getQueueSize() == getCapacity();
     }
 
-    public synchronized boolean isEmpty() {
+    public boolean isEmpty() {
         return getQueueSize()==0;
     }
 

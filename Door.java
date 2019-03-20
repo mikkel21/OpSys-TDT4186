@@ -17,23 +17,14 @@ public class Door implements Runnable {
     @Override
     public void run() {
         while (SushiBar.isOpen) { //run as long as SushiBar is open
-            synchronized (waitingArea) {
-                while (waitingArea.isFull()) { // wait while the area is full
-                    try {
-                        waitingArea.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    Thread.sleep(new Random().nextInt(SushiBar.doorWait)); //sleep for a maximum of doorWait seconds
-                    Customer customer = new Customer();
-                    waitingArea.enter(customer); //put customer in the waitingArea queue
-                    SushiBar.write("Customer #" + customer.getCustomerID() + " is now waiting");
-                    SushiBar.customerCounter.increment(); //increment customerCounter
-                } catch (InterruptedException e) {
-                    System.out.println(e);
-                }
+            try {
+                Thread.sleep(new Random().nextInt(SushiBar.doorWait)); //sleep for a maximum of doorWait seconds
+                Customer customer = new Customer();
+                waitingArea.enter(customer); //put customer in the waitingArea queue
+                SushiBar.write("Customer #" + customer.getCustomerID() + " is now waiting");
+                SushiBar.customerCounter.increment(); //increment customerCounter
+            } catch (InterruptedException e) {
+                System.out.println(e);
             }
         }
         SushiBar.write("***** DOOR CLOSED *****");
